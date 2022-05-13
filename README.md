@@ -37,15 +37,15 @@ func main() {
 
 ## Performance
 
-In a micro-benchmark, this library performs about 50% slower as manually using the stdlib.
+In a micro-benchmark, this library performs similarly to using `context.WithValue` manually.
 
 ```
 goos: darwin
 goarch: amd64
 pkg: github.com/mraerino/typed-context
 cpu: Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz
-BenchmarkStdlib-16      205549032                5.782 ns/op           0 B/op          0 allocs/op
-BenchmarkTyped-16       123351498                8.951 ns/op           0 B/op          0 allocs/op
+BenchmarkStdlib-16      203086635                5.857 ns/op           0 B/op          0 allocs/op
+BenchmarkTyped-16       194297246                6.054 ns/op           0 B/op          0 allocs/op
 PASS
-ok      github.com/mraerino/typed-context       3.977s
+ok      github.com/mraerino/typed-context       3.712s
 ```
