@@ -42,3 +42,50 @@ func TestGetSet(t *testing.T) {
 	require.True(t, ok)
 	assert.Equal(t, "0c4f7d51-af18-4475-9fdc-5f022fb8079c", string(actual4))
 }
+
+type ctxKey uint64
+
+const (
+	requestIDKey ctxKey = iota
+)
+
+var valStdlib any
+
+func BenchmarkStdlib(b *testing.B) {
+	ctx := context.Background()
+
+	ctx = context.WithValue(ctx, requestIDKey, "0c4f7d51-af18-4475-9fdc-5f022fb8079c")
+
+	var val any
+	for n := 0; n < b.N; n++ {
+		val = ctx.Value(requestIDKey)
+		if val == nil {
+			b.Fatal("not found")
+		}
+		if val.(string) != "0c4f7d51-af18-4475-9fdc-5f022fb8079c" {
+			b.Fatal("wrong value")
+		}
+	}
+	valStdlib = val
+}
+
+var valTyped RequestID
+
+func BenchmarkTyped(b *testing.B) {
+	ctx := context.Background()
+
+	ctx = typedcontext.Set(ctx, RequestID("0c4f7d51-af18-4475-9fdc-5f022fb8079c"))
+
+	var val RequestID
+	var ok bool
+	for n := 0; n < b.N; n++ {
+		val, ok = typedcontext.Get[RequestID](ctx)
+		if !ok {
+			b.Fatal("not found")
+		}
+		if val != "0c4f7d51-af18-4475-9fdc-5f022fb8079c" {
+			b.Fatal("wrong value")
+		}
+	}
+	valTyped = val
+}
