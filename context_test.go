@@ -12,6 +12,10 @@ import (
 type Welcome string
 type RequestID string
 
+type MyStruct struct {
+	ID string
+}
+
 func TestGetSet(t *testing.T) {
 	ctx := context.Background()
 
@@ -41,6 +45,16 @@ func TestGetSet(t *testing.T) {
 	actual4, ok := typedcontext.Get[RequestID](ctx)
 	require.True(t, ok)
 	assert.Equal(t, "0c4f7d51-af18-4475-9fdc-5f022fb8079c", string(actual4))
+
+	// pointer
+	value4 := &MyStruct{
+		ID: "hello",
+	}
+	ctx = typedcontext.Set(ctx, value4)
+
+	actual5, ok := typedcontext.Get[*MyStruct](ctx)
+	require.True(t, ok)
+	assert.Equal(t, "hello", actual5.ID)
 }
 
 type ctxKey uint64
